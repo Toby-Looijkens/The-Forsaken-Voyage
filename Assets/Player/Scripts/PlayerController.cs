@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEditor.U2D;
 using UnityEngine;
@@ -17,6 +18,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float verticalSensitivity = 0.5f;
     [SerializeField] int recoilpower = 5;
 
+    private bool isPlayerLocked = false;
+
     private void Awake()
     {
         playerInputManager = GetComponent<PlayerInputManager>();
@@ -29,20 +32,44 @@ public class PlayerController : MonoBehaviour
         {
             SlowDownPlayer();
         }
-        MovePlayer();
+
+        if (!isPlayerLocked) 
+        {
+            MovePlayer();
+            RotatePlayer();
+        }
         Shoot();
     }
 
     private void OnStop()
     {
-        globalSpeedVector = Vector3.zero;  
+        Debug.Log(globalSpeedVector.magnitude);
+        if (globalSpeedVector.magnitude > 3)
+        {
+            return;
+        }
+
+        if (isPlayerLocked)
+        {
+            isPlayerLocked = false;
+        } else
+        {
+            isPlayerLocked = true;
+        }
     }
 
     private void OnLook(InputValue value)
     {
         Vector2 temp = value.Get<Vector2>();
 
-        transform.Rotate(-temp.y * horizontalSensitivity, temp.x * verticalSensitivity, 0);
+        if (isPlayerLocked)
+        {
+            transform.Rotate(-temp.y * horizontalSensitivity, Mathf.Clamp(temp.x * verticalSensitivity, -25, 85), 0);
+        }
+        else 
+        {
+            transform.Rotate(-temp.y * horizontalSensitivity, temp.x * verticalSensitivity, 0);
+        }
     }
 
     private void MovePlayer()
@@ -63,7 +90,10 @@ public class PlayerController : MonoBehaviour
 
         globalSpeedVector += relativeMovement * acceleration * Time.deltaTime;
         transform.position += globalSpeedVector * Time.deltaTime;
+    }
 
+    private void RotatePlayer()
+    { 
         transform.Rotate(0, 0, playerInputManager.rollVector.y * rotationSpeed * Time.deltaTime);
     }
 
