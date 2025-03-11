@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -79,7 +80,7 @@ public class GrapplingHook : MonoBehaviour
 
     private void ExecuteGrapple()
     {
-
+        playerController.MovePlayerToGrapplePoint(grapplePoint);
     }
 
     private void StopGrapple()

@@ -152,4 +152,10 @@ public class PlayerController : MonoBehaviour
 
         rigidbody.linearVelocity -= forwardRelative;
     }
+
+    public void MovePlayerToGrapplePoint(Vector3 endPoint)
+    {
+        Vector3 grapple = endPoint - rigidbody.position;
+        rigidbody.linearVelocity += grapple;
+    }
 }
