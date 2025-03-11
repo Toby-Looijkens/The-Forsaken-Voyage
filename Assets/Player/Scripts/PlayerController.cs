@@ -7,8 +7,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    private Vector3 globalSpeedVector = new Vector3(0, 0, 0);
-
     private PlayerInputManager playerInputManager;
 
     [SerializeField] float acceleration = 5f;
@@ -17,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float horizontalSensitivity = 0.8f;
     [SerializeField] float verticalSensitivity = 0.5f;
     [SerializeField] int recoilpower = 5;
+    [SerializeField] Rigidbody rigidbody;
 
     private bool isPlayerLocked = false;
 
@@ -28,6 +27,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        rigidbody.angularVelocity = Vector3.zero;
         if (playerInputManager.movementVector == Vector3.zero)
         {
             SlowDownPlayer();
@@ -43,8 +43,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnStop()
     {
-        Debug.Log(globalSpeedVector.magnitude);
-        if (globalSpeedVector.magnitude > 3)
+        if (rigidbody.linearVelocity.magnitude > 3)
         {
             return;
         }
@@ -64,11 +63,11 @@ public class PlayerController : MonoBehaviour
 
         if (isPlayerLocked)
         {
-            transform.Rotate(-temp.y * horizontalSensitivity, Mathf.Clamp(temp.x * verticalSensitivity, -25, 85), 0);
+            rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(-temp.y * horizontalSensitivity, Mathf.Clamp(temp.x * verticalSensitivity, -25, 85), 0));
         }
         else 
         {
-            transform.Rotate(-temp.y * horizontalSensitivity, temp.x * verticalSensitivity, 0);
+            rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(-temp.y * horizontalSensitivity, temp.x * verticalSensitivity, 0));
         }
     }
 
@@ -88,56 +87,59 @@ public class PlayerController : MonoBehaviour
 
         Vector3 relativeMovement = forwardRelative + rightRelative + upRelative;
 
-        globalSpeedVector += relativeMovement * acceleration * Time.deltaTime;
-        transform.position += globalSpeedVector * Time.deltaTime;
+        rigidbody.linearVelocity += relativeMovement * acceleration * Time.deltaTime;
+        //transform.position += globalSpeedVector * Time.deltaTime;
     }
 
     private void RotatePlayer()
     { 
-        transform.Rotate(0, 0, playerInputManager.rollVector.y * rotationSpeed * Time.deltaTime);
+        rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(0, 0, playerInputManager.rollVector.y * rotationSpeed * Time.deltaTime));
     }
 
     private void SlowDownPlayer()
     {
-        Vector3 speedVector = globalSpeedVector;
+        Vector3 speedVector = rigidbody.linearVelocity;
         Vector3 invertedSpeedVector = speedVector * -1 * deceleration * Time.deltaTime;
 
         if (Mathf.Abs(speedVector.x) >= 0 && Mathf.Abs(speedVector.x) <= Mathf.Abs(invertedSpeedVector.x))
         {
-            globalSpeedVector.x = 0;
-        } else
+            speedVector.x = 0;
+        }
+        else
         {
-            globalSpeedVector.x += invertedSpeedVector.x;
+            speedVector.x += invertedSpeedVector.x;
         }
 
         if (Mathf.Abs(speedVector.y) >= 0 && Mathf.Abs(speedVector.y) <= Mathf.Abs(invertedSpeedVector.y))
         {
-            globalSpeedVector.y = 0;
+            speedVector.y = 0;
         }
         else
         {
-            globalSpeedVector.y += invertedSpeedVector.y;
+            speedVector.y += invertedSpeedVector.y;
         }
 
         if (Mathf.Abs(speedVector.z) >= 0 && Mathf.Abs(speedVector.z) <= Mathf.Abs(invertedSpeedVector.z))
         {
-            globalSpeedVector.z = 0;
+            speedVector.z = 0;
         }
         else
         {
-            globalSpeedVector.z += invertedSpeedVector.z;
+            speedVector.z += invertedSpeedVector.z;
         }
+
+        rigidbody.linearVelocity = speedVector;
     }
 
     private void Shoot()
     {
         if (playerInputManager.isTriggerPulled > 0)
         {
-            recoil(recoilpower);
+            Recoil(recoilpower);
         }
     }
 
-    public void recoil(int power)
+    public void Recoil(int power)
     {
         Vector3 input = playerInputManager.movementVector;
 
@@ -145,9 +147,9 @@ public class PlayerController : MonoBehaviour
         Vector3 forward = Camera.main.transform.forward;
 
         //Movement based on where player is looking
-        Vector3 forwardRelative = forward * power;
+        Vector3 forwardRelative = forward * power / 100;
 
 
-        globalSpeedVector -= forwardRelative;
+        rigidbody.linearVelocity -= forwardRelative;
     }
 }
