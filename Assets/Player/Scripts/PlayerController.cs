@@ -8,12 +8,17 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     private PlayerInputManager playerInputManager;
-
+    [Header("Player movement")]
     [SerializeField] float acceleration = 5f;
     [SerializeField] float deceleration = 5f;
+    [SerializeField] float grapplingHookStrength = 2f;
+
+    [Header("Camera movement")]
     [SerializeField] float rotationSpeed = 5f;
     [SerializeField] float horizontalSensitivity = 0.8f;
     [SerializeField] float verticalSensitivity = 0.5f;
+
+    [Header("Extra")]
     [SerializeField] int recoilpower = 5;
     [SerializeField] Rigidbody rigidbody;
 
@@ -156,6 +161,6 @@ public class PlayerController : MonoBehaviour
     public void MovePlayerToGrapplePoint(Vector3 endPoint)
     {
         Vector3 grapple = endPoint - rigidbody.position;
-        rigidbody.linearVelocity += grapple;
+        rigidbody.linearVelocity += grapple * grapplingHookStrength;
     }
 }

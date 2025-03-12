@@ -151,7 +151,6 @@ GameObject:
   - component: {fileID: 1955385870821411504}
   - component: {fileID: 9208612365378531055}
   - component: {fileID: 8976103696035152106}
-  - component: {fileID: 1414198637640031637}
   - component: {fileID: 2584809759498914888}
   - component: {fileID: 340086627539845474}
   - component: {fileID: 4639030096827014310}
@@ -263,31 +262,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!143 &1414198637640031637
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6314586875989858442}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 1
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &2584809759498914888
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -352,6 +326,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   acceleration: 20
   deceleration: 2
+  grapplingHookStrength: 1.2
   rotationSpeed: 50
   horizontalSensitivity: 0.8
   verticalSensitivity: 0.5
