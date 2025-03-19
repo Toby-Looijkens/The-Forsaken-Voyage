@@ -16,7 +16,7 @@ public class Health : MonoBehaviour
     {
         if (health < 1)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 
