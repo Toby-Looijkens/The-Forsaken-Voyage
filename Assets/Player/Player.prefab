@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5430447904619793883}
   - component: {fileID: 1616946240597819190}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GrappleGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -156,7 +156,8 @@ GameObject:
   - component: {fileID: 4639030096827014310}
   - component: {fileID: 3454118108042756953}
   - component: {fileID: 1154792840427365349}
-  m_Layer: 0
+  - component: {fileID: 1544052247272967445}
+  m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,7 +328,9 @@ MonoBehaviour:
   acceleration: 20
   deceleration: 2
   grapplingHookStrength: 1.2
-  rotationSpeed: 50
+  maxRotationSpeed: 1.5
+  rollAcceleration: 0.5
+  rollDeceleration: 3
   horizontalSensitivity: 0.8
   verticalSensitivity: 0.5
   recoilpower: 3
@@ -366,6 +369,19 @@ MonoBehaviour:
   grappleDelayTime: 0.25
   grappleCooldown: 1
   grappleKey: 324
+--- !u!114 &1544052247272967445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6314586875989858442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82e52702bb208dc4999d58269c2e6c27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetNode: {fileID: 0}
 --- !u!1 &6533471581289145614
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,7 +393,7 @@ GameObject:
   - component: {fileID: 151504284382951739}
   - component: {fileID: 782351609562762724}
   - component: {fileID: 124147038171955135}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CinemachineCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
