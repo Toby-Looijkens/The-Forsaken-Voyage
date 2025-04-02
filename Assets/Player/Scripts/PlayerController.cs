@@ -63,6 +63,11 @@ public class PlayerController : MonoBehaviour
             StopRoll();
         }
 
+        if (playerInputManager.isAlignmentKeyPressed > 0) 
+        { 
+            //CenterRoll();
+        }
+
         if (!isPlayerLocked) 
         {
             MovePlayer();
@@ -71,9 +76,9 @@ public class PlayerController : MonoBehaviour
         Shoot();
     }
 
-    private void OnStop()
+    private void CenterRoll()
     {
-        rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(0, 0, playerInputManager.rollVector.y * rollAcceleration * Time.deltaTime));
+        rigidbody.rotation = Quaternion.Slerp(rigidbody.rotation, Quaternion.FromToRotation(rigidbody.transform.up, Vector3.up) * transform.rotation, 2f);
     }
 
     private void OnLook(InputValue value)

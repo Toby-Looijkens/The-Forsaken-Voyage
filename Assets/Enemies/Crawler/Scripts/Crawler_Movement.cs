@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class Crawler_Movement : MonoBehaviour
 {
-    //[SerializeField] GameObject player;
-    //[SerializeField] NavMeshAgent agent;
+    [SerializeField] GameObject player;
+    [SerializeField] NavMeshAgent agent;
     [SerializeField] LayerMask mask;
     [SerializeField] float speed = 500f;
 
@@ -18,44 +18,13 @@ public class Crawler_Movement : MonoBehaviour
     {
         //targetNode = player.GetComponent<PostionPlayerOnNavmesh>().targetNode;
         //CreatePath();
-        //agent.destination = player.transform.position;
-        Move();
+        agent.destination = player.transform.position;
     }
 
-    static public bool ArcCast(Vector3 center, Quaternion rotation, float angle, float radius, int resolution, LayerMask layer, out RaycastHit hit, Color color)
-    {
-        rotation *= Quaternion.Euler(-angle / 2, 0, 0);
-
-        for (int i = 0; i < resolution; i++)
-        {
-            Vector3 A = center + rotation * Vector3.forward * radius;
-            rotation *= Quaternion.Euler(angle / resolution, 0, 0);
-            Vector3 B = center + rotation * Vector3.forward * radius;
-            Vector3 AB = B - A;
-
-            Debug.DrawRay(A, AB, color);
-            if (Physics.Raycast(A, AB, out hit, AB.magnitude * 1.001f, layer)) 
-            { 
-              return true;
-            }
-        }
-
-        hit = new RaycastHit();
-        return false;
-    }
+   
 
     public void Move()
     {
-        float arcAngle = 270;
-        float arcRadius = 0.5f;
-        int arcResolution = 6;
-
-        if (ArcCast(transform.position, transform.rotation, arcAngle, arcRadius, arcResolution, mask, out RaycastHit hit, Color.red))
-        {
-            transform.position = Vector3.MoveTowards(transform.position, hit.point, speed * Time.deltaTime);
-            transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
-        }
-
         //for (int i = 1; i < 8; i++)
         //{
         //    if (ArcCast(transform.position, Quaternion.Euler(transform.up) * Quaternion.Euler(0, 45 * i, 0), arcAngle, arcRadius, arcResolution, mask, out RaycastHit _hit, Color.blue))

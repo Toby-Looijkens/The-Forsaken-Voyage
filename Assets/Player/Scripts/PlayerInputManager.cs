@@ -8,6 +8,7 @@ public class PlayerInputManager : MonoBehaviour
     public Vector3 movementVector {  get; private set; }
     public Vector2 rollVector { get; private set; }
     public float isTriggerPulled { get; private set; }
+    public float isAlignmentKeyPressed { get; private set; }
     public float isAimingDownSights { get; private set; }
     public float isInteracting { get; private set; }
 
@@ -24,6 +25,11 @@ public class PlayerInputManager : MonoBehaviour
     private void OnShoot(InputValue value)
     {
         isTriggerPulled = value.Get<float>();
+    }
+
+    private void OnStop(InputValue value)
+    {
+        isAlignmentKeyPressed = value.Get<float>();
     }
 
     private void OnAimDownSights(InputValue value)
