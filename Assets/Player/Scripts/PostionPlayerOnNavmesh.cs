@@ -22,7 +22,6 @@ public class PostionPlayerOnNavmesh : MonoBehaviour
             if (Vector3.Distance(transform.position, node.transform.position) < (Vector3.Distance(transform.position, targetNode.transform.position)))
             {
                 targetNode = node;
-                Debug.Log(targetNode);
             }
         }
     }

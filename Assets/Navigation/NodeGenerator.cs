@@ -69,7 +69,7 @@ public class NodeGenerator : MonoBehaviour
                     Vector3 position = new Vector3(x * distanceBetweenNodes, y * distanceBetweenNodes, z * distanceBetweenNodes) + transform.position - transform.localScale / 2;
                     int maxColliders = 2;
                     Collider[] hitColliders = new Collider[maxColliders];
-                    if (Physics.OverlapSphereNonAlloc(position, distanceBetweenNodes / 2, hitColliders, mask) == 0 && Physics.OverlapSphereNonAlloc(position, distanceBetweenNodes * 0.9f, hitColliders, mask) > 0)
+                    if (Physics.OverlapBoxNonAlloc(position, new Vector3(distanceBetweenNodes * 0.5f, distanceBetweenNodes * 0.5f, distanceBetweenNodes * 0.5f), hitColliders, Quaternion.identity, mask) == 0 && Physics.OverlapBoxNonAlloc(position, new Vector3(distanceBetweenNodes, distanceBetweenNodes, distanceBetweenNodes), hitColliders, Quaternion.identity, mask) > 0)
                     {
                         Node node = Instantiate(nodePrefab, position, Quaternion.identity);
                         nodeList.Add(node);

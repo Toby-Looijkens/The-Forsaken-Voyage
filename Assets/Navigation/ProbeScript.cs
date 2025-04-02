@@ -9,7 +9,6 @@ public class ProbeScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("test");
         if (collision.gameObject.layer == mask)
         {
             isTouchingTerrain = true;
