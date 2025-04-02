@@ -14,7 +14,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float grapplingHookStrength = 2f;
 
     [Header("Camera movement")]
-    [SerializeField] float rotationSpeed = 5f;
+    [SerializeField] float maxRotationSpeed = 2f;
+    [SerializeField] float rollAcceleration = 0.5f;
+    [SerializeField] float rollDeceleration = 2.0f;
     [SerializeField] float horizontalSensitivity = 0.8f;
     [SerializeField] float verticalSensitivity = 0.5f;
 
@@ -23,6 +25,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Rigidbody rigidbody;
 
     private bool isPlayerLocked = false;
+    private float rollingVelocity = 0;
 
     private void Awake()
     {
@@ -38,28 +41,39 @@ public class PlayerController : MonoBehaviour
             SlowDownPlayer();
         }
 
+        if (rollingVelocity >= maxRotationSpeed) { 
+            rollingVelocity = maxRotationSpeed;
+        } 
+        else if (rollingVelocity <= -maxRotationSpeed)
+        {
+            rollingVelocity = -maxRotationSpeed;
+        } 
+        else
+        {
+            rollingVelocity += playerInputManager.rollVector.y * rollAcceleration * Time.deltaTime;
+        }
+
+        if (rollingVelocity != 0) 
+        { 
+            RotatePlayer();
+        }
+
+        if (playerInputManager.rollVector == Vector2.zero)
+        {
+            StopRoll();
+        }
+
         if (!isPlayerLocked) 
         {
             MovePlayer();
-            RotatePlayer();
         }
+
         Shoot();
     }
 
     private void OnStop()
     {
-        if (rigidbody.linearVelocity.magnitude > 3)
-        {
-            return;
-        }
-
-        if (isPlayerLocked)
-        {
-            isPlayerLocked = false;
-        } else
-        {
-            isPlayerLocked = true;
-        }
+        rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(0, 0, playerInputManager.rollVector.y * rollAcceleration * Time.deltaTime));
     }
 
     private void OnLook(InputValue value)
@@ -98,7 +112,19 @@ public class PlayerController : MonoBehaviour
 
     private void RotatePlayer()
     { 
-        rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(0, 0, playerInputManager.rollVector.y * rotationSpeed * Time.deltaTime));
+
+        rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(0, 0, rollingVelocity));
+    }
+
+    private void StopRoll()
+    {
+        rollingVelocity -= rollingVelocity * rollDeceleration * Time.deltaTime;
+        if (rollingVelocity > 0 && rollingVelocity < 0.01f) {
+         
+        } else if (rollingVelocity < 0 && rollingVelocity > 0.01f)
+        {
+            rollingVelocity = 0;
+        }
     }
 
     private void SlowDownPlayer()
