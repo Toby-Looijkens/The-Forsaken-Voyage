@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     private PlayerInputManager playerInputManager;
     [Header("Player movement")]
-    [SerializeField] float acceleration = 5f;
+    [SerializeField] public float acceleration = 5f;
     [SerializeField] float deceleration = 5f;
     [SerializeField] float grapplingHookStrength = 2f;
 

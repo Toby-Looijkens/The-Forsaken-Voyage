@@ -11,6 +11,9 @@ public class DropOff : MonoBehaviour
     [SerializeField] private float distance;
     private bool finishCollect = true;
     public TextMeshProUGUI uiTotal;
+    private bool tipActive = false;
+
+    [SerializeField] private UIManager uiManager;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -25,6 +28,18 @@ public class DropOff : MonoBehaviour
             var dropoffPosition = gameObject.transform.position;
             var playerPosition = player.transform.position;
             distance = Vector3.Distance(dropoffPosition,playerPosition);
+
+            if (distance < 3) 
+            {
+                uiManager.TipDropOffOn();
+                tipActive = true;
+            }
+            else if (tipActive == true)
+            {
+                uiManager.TipDropOffOff();
+                tipActive = false;
+            }
+
             if (distance < 3 && playerinput.isInteracting > 0) 
             {
                 finishCollect = false;
@@ -37,6 +52,7 @@ public class DropOff : MonoBehaviour
     {
         total = total + lootManager.totalValue;
         lootManager.totalValue = 0;
+        lootManager.totalAmount = 0;
         Debug.Log(total);
         uiTotal.text = "Total: $" + total.ToString();
         finishCollect = true;

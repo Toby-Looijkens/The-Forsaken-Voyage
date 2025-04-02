@@ -1,6 +1,8 @@
 using Mono.Cecil.Cil;
 using UnityEngine;
 using System.Collections;
+using TMPro.EditorUtilities;
+using Unity.VisualScripting.Antlr3.Runtime;
 
 public class LootingScript : MonoBehaviour
 {
@@ -9,8 +11,10 @@ public class LootingScript : MonoBehaviour
     [SerializeField] private int lootValue;
     [SerializeField] public GameObject player;
     [SerializeField] private float distance;
-    [SerializeField] public PlayerInputManager playerinput;
+    public PlayerInputManager playerinput;
     [SerializeField] private LootManager lootManager;
+    [SerializeField] private UIManager uiManager;
+    private bool tipActive = false;
        
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -28,6 +32,20 @@ public class LootingScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        var lootPosition = gameObject.transform.position;
+        var playerPosition = player.transform.position;
+        distance = Vector3.Distance(lootPosition,playerPosition);
+
+        if (distance < 3) 
+        {
+            uiManager.TipLootCollectOn();
+            tipActive = true;
+        }
+        else if (tipActive == true)
+        {
+            uiManager.TipLootCollectOff();
+            tipActive = false;
+        }
 
         if (playerinput.isInteracting > 0)
         {
@@ -39,13 +57,11 @@ public class LootingScript : MonoBehaviour
     {
         if (lootActive == 1)
         {
-            var lootPosition = gameObject.transform.position;
-            var playerPosition = player.transform.position;
-            distance = Vector3.Distance(lootPosition,playerPosition);
             if (distance < 3) 
             {
                 gameObject.SetActive(false);
                 lootManager.Collect(lootValue);
+                uiManager.TipLootCollectOff();
             }
         }
     }
