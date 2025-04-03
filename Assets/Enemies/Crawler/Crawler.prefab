@@ -117,7 +117,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4881256316259099790}
-  - component: {fileID: 3194290867586192556}
+  - component: {fileID: 7494691966244641507}
   m_Layer: 6
   m_Name: Crawler
   m_TagString: Untagged
@@ -141,7 +141,7 @@ Transform:
   - {fileID: 6470241260713120883}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3194290867586192556
+--- !u!114 &7494691966244641507
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -150,10 +150,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 3680694999929423665}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0301a2611321b0a47bab61da2aa7ea4b, type: 3}
+  m_Script: {fileID: 11500000, guid: ea6bf3244ebe8dc45ac2a681b1e3de9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  crawlerWaypointMaker: {fileID: 0}
+  speed: 5
+  amountOfArcsPerRow: 10
+  rows: 5
+  arcAngle: 270
+  arcRadius: 1
+  arcResolution: 6
+  turnOnDebugRays: 1
   layer:
     serializedVersion: 2
     m_Bits: 512
-  speed: 1
