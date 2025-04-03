@@ -25,8 +25,6 @@ public class Crawler_Movement : MonoBehaviour
     [SerializeField] bool turnOnDebugRays = false;
     [SerializeField] LayerMask layer;
 
-    private Vector2 movementVector = Vector2.zero;
-
     private void Update()
     {
         if (crawlerWaypointMaker == null)
@@ -40,42 +38,13 @@ public class Crawler_Movement : MonoBehaviour
         AlignToSurface();
     }
 
-    static public bool ArcCast(Vector3 center, Quaternion rotation, float angle, float radius, int resolution, LayerMask layer, out RaycastHit hit, bool turnOnDebugRays)
-    {
-        rotation *= Quaternion.Euler(-angle / 2, 0, 0);
-
-        for (int i = 0; i < resolution; i++)
-        {
-            Vector3 A = center + rotation * Vector3.forward * radius;
-            rotation *= Quaternion.Euler(angle / resolution, 0, 0);
-            Vector3 B = center + rotation * Vector3.forward * radius;
-            Vector3 AB = B - A;
-
-            if (turnOnDebugRays)
-            {
-                Debug.DrawRay(A, AB, Color.red);
-            }
-
-            if (Physics.Raycast(A, AB, out hit, AB.magnitude * 1.001f, layer))
-            {
-                if (turnOnDebugRays)
-                {
-                    Debug.DrawRay(hit.point, hit.normal * 0.05f, Color.white);
-                }
-                return true;
-            }
-        }
-        hit = new RaycastHit();
-        return false;
-    }
-
     public void Move()
     {
         if (crawlerWaypointMaker.path.Count !=0)
         {
             transform.position = Vector3.MoveTowards(transform.position, crawlerWaypointMaker.path[0], speed * Time.deltaTime);
         }
-      
+
         if (crawlerWaypointMaker.path.Count !=0 && (crawlerWaypointMaker.path[0] - transform.position).magnitude < 0.1f)
         {
             crawlerWaypointMaker.path.RemoveAt(0);
@@ -84,7 +53,7 @@ public class Crawler_Movement : MonoBehaviour
 
     public void MoveForward()
     {
-        if (ArcCast(transform.position, transform.rotation, arcAngle, arcRadius, arcResolution, layer, out RaycastHit hit, turnOnDebugRays))
+        if (RaycastExtensions.ArcCast(transform.position, transform.rotation, arcAngle, arcRadius, arcResolution, layer, out RaycastHit hit, turnOnDebugRays))
         {
             transform.position = Vector3.MoveTowards(transform.position, hit.point, speed * Time.deltaTime);
         }
@@ -100,7 +69,7 @@ public class Crawler_Movement : MonoBehaviour
         {
             for (int j = 0; j < amountOfArcsPerRow; j++)
             {
-                if (ArcCast(transform.position, transform.rotation * Quaternion.Euler(0, 360 / amountOfArcsPerRow * j, 0), arcAngle, arcRadius * (spacingBetweenRows * i), arcResolution, layer, out RaycastHit _hit, turnOnDebugRays))
+                if (RaycastExtensions.ArcCast(transform.position, transform.rotation * Quaternion.Euler(0, 360 / amountOfArcsPerRow * j, 0), arcAngle, arcRadius * (spacingBetweenRows * i), arcResolution, layer, out RaycastHit _hit, turnOnDebugRays))
                 {
                     // Calculate a normal to better align object to terrain
                     Debug.DrawRay(transform.position, -Vector3.Cross(Vector3.Cross(transform.up, _hit.point - transform.position), _hit.point - transform.position), Color.green);

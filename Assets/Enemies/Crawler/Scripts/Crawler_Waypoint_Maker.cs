@@ -28,7 +28,7 @@ public class Crawler_Waypoint_Maker : MonoBehaviour
 
         if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, 50, mask))
         {
-            if (path.Count == 0 || Vector3.Distance(path.Last(), hit.point) > 0.02f)
+            if (path.Count == 0 || Vector3.Distance(path.Last(), hit.point) > 0.1f)
             {
                 path.Add(hit.point);
             }

@@ -72,7 +72,6 @@ public class Rotate_Body : MonoBehaviour
 
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.FromToRotation(transform.up, averageNormal.normalized) * transform.rotation, 0.1f);
         Debug.DrawRay(transform.position, averageNormal, Color.magenta);
-
     }
 }
 
