@@ -5,6 +5,10 @@ public class UIManager : MonoBehaviour
 {
 
     public TextMeshProUGUI uiTip;
+    public TextMeshProUGUI uiAmmo;
+    public Hitscan hitscan;
+    public int ammo;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -15,7 +19,8 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        ammo = hitscan.ammo;
+        uiAmmo.text = "Ammo: " + ammo.ToString();
     }
 
     public void TipLootCollectOn()
