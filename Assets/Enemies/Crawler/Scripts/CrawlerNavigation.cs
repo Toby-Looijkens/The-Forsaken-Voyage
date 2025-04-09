@@ -34,11 +34,11 @@ public class CrawlerNavigation : MonoBehaviour
     {
         if (crawlerWaypointMaker.path.Count !=0)
         {
-            //transform.parent.position = Vector3.MoveTowards(transform.position, crawlerWaypointMaker.path[0], speed * Time.deltaTime);
-            if (RaycastExtensions.ArcCast(transform.position, transform.rotation, arcAngle, arcRadius, arcResolution, layer, out RaycastHit hit, turnOnDebugRays))
-            {
-                transform.parent.position = Vector3.MoveTowards(transform.position, hit.point + hit.normal * 0.05f, speed * Time.deltaTime);
-            }
+            transform.parent.position = Vector3.MoveTowards(transform.position, crawlerWaypointMaker.path[0], speed * Time.deltaTime);
+            //if (RaycastExtensions.ArcCast(transform.position, transform.rotation, arcAngle, arcRadius, arcResolution, layer, out RaycastHit hit, turnOnDebugRays))
+            //{
+            //    transform.parent.position = Vector3.MoveTowards(transform.position, hit.point + hit.normal * 0.05f, speed * Time.deltaTime);
+            //}
         }
 
         if (crawlerWaypointMaker.path.Count !=0 && (crawlerWaypointMaker.path[0] - transform.position).magnitude < 0.1f)
@@ -51,7 +51,8 @@ public class CrawlerNavigation : MonoBehaviour
     {
         if (RaycastExtensions.ArcCast(transform.position, transform.rotation, arcAngle, arcRadius, arcResolution, layer, out RaycastHit hit, turnOnDebugRays))
         {
-            transform.position = Vector3.MoveTowards(transform.position, hit.point, speed * Time.deltaTime);
+            transform.rotation = rotationComponent.transform.rotation;
+            transform.parent.position = Vector3.MoveTowards(transform.position, hit.point, speed * Time.deltaTime);
         }
     }
 }
