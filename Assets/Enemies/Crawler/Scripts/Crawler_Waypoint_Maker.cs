@@ -8,11 +8,7 @@ using UnityEngine.UI;
 public class Crawler_Waypoint_Maker : MonoBehaviour
 {
     [SerializeField] GameObject player;
-    [SerializeField] Node nodePrefab;
     [SerializeField] LayerMask mask;
-    [SerializeField] float speed = 5f;
-    [SerializeField] float secondsPerWaypoint = 0.01f;
-    private float time = 0f;
     private NavMeshAgent agent;
 
     public List<Vector3> path = new List<Vector3>();
@@ -20,6 +16,7 @@ public class Crawler_Waypoint_Maker : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        player = GameObject.Find("Player");
     }
 
     private void Update()

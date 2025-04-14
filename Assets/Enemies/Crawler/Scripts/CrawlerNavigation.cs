@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 public class CrawlerNavigation : MonoBehaviour
 {
-    [SerializeField] private Crawler_Waypoint_Maker crawlerWaypointMaker;
+    [SerializeField] public GameObject crawlerWaypointMaker;
     [SerializeField] float speed = 5f;
     [SerializeField] GameObject rotationComponent;
 
@@ -32,18 +32,19 @@ public class CrawlerNavigation : MonoBehaviour
 
     public void Move()
     {
-        if (crawlerWaypointMaker.path.Count !=0)
+        Crawler_Waypoint_Maker cwp  = crawlerWaypointMaker.GetComponent<Crawler_Waypoint_Maker>();
+        if (cwp.path.Count !=0)
         {
-            transform.parent.position = Vector3.MoveTowards(transform.position, crawlerWaypointMaker.path[0], speed * Time.deltaTime);
+            transform.parent.position = Vector3.MoveTowards(transform.position, cwp.path[0], speed * Time.deltaTime);
             //if (RaycastExtensions.ArcCast(transform.position, transform.rotation, arcAngle, arcRadius, arcResolution, layer, out RaycastHit hit, turnOnDebugRays))
             //{
             //    transform.parent.position = Vector3.MoveTowards(transform.position, hit.point + hit.normal * 0.05f, speed * Time.deltaTime);
             //}
         }
 
-        if (crawlerWaypointMaker.path.Count !=0 && (crawlerWaypointMaker.path[0] - transform.position).magnitude < 0.1f)
+        if (cwp.path.Count !=0 && (cwp.path[0] - transform.position).magnitude < 0.1f)
         {
-            crawlerWaypointMaker.path.RemoveAt(0);
+            cwp.path.RemoveAt(0);
         }
     }
 

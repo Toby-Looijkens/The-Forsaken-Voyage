@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crawlerWaypointMaker: {fileID: 0}
   speed: 5
+  rotationComponent: {fileID: 0}
   amountOfArcsPerRow: 10
   rows: 1
   spacingBetweenRows: 1.5
@@ -228,6 +229,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4881256316259099790}
+  - component: {fileID: 2783064804835212775}
   m_Layer: 6
   m_Name: Crawler
   m_TagString: Untagged
@@ -252,3 +254,20 @@ Transform:
   - {fileID: 4948392838551809529}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2783064804835212775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3680694999929423665}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26df73292bcc874a858848a2f2fee5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  orientation: {fileID: 6859540575947240330}
+  navigation: {fileID: 7640394283221824895}
+  crawlerWaypointMaker: {fileID: 5058969153046199446, guid: f34d439d45e762d4e8a5773d4374a17f, type: 3}
+  speed: 5
