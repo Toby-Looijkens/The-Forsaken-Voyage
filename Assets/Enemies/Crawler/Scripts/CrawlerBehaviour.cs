@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class CrawlerBehaviour : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class CrawlerBehaviour : MonoBehaviour
     [SerializeField] CrawlerOrientation orientation;
     [SerializeField] CrawlerNavigation navigation;
     [SerializeField] GameObject crawlerWaypointMaker;
+    [SerializeField] LayerMask layerMask;
     [SerializeField] float speed;
     [SerializeField] float jumpCooldown = 10f;
 
@@ -18,7 +20,7 @@ public class CrawlerBehaviour : MonoBehaviour
 
     void Update()
     {
-        if (player != null && target == Vector3.zero && canJump == true && (player.position + player.linearVelocity - transform.position).magnitude < 5)
+        if (player != null && target == Vector3.zero && canJump)
         {
             Attack();
         }
@@ -26,12 +28,11 @@ public class CrawlerBehaviour : MonoBehaviour
         if (target != Vector3.zero)
         {
             transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
-            transform.rotation = Quaternion.Slerp(GetComponentInParent<Transform>(orientation).rotation, Quaternion.Euler(targetNormal), distance - (target - transform.position).magnitude);
+            orientation.transform.rotation = Quaternion.FromToRotation(orientation.GetComponent<Transform>().up, targetNormal) * orientation.transform.rotation;
             if ((transform.position - target).magnitude < 0.05)
             {
+                GameObject temp = Instantiate(crawlerWaypointMaker, target, Quaternion.FromToRotation(Vector3.up, targetNormal));
                 target = Vector3.zero;
-
-                GameObject temp = Instantiate(crawlerWaypointMaker, transform.position, Quaternion.identity);
                 navigation.crawlerWaypointMaker = temp;
                 navigation.enabled = true;
                 orientation.enabled = true;
@@ -49,7 +50,7 @@ public class CrawlerBehaviour : MonoBehaviour
 
     private void Attack()
     {
-        if (Physics.Raycast(transform.position, player.position + player.linearVelocity - transform.position, out RaycastHit hitInfo))
+        if (Physics.Raycast(transform.position, player.position - transform.position, out RaycastHit hitInfo, 100f, layerMask))
         {
             Debug.Log("test");
             Destroy(navigation.crawlerWaypointMaker);

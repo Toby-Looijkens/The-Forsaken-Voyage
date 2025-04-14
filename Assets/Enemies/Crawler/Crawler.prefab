@@ -270,4 +270,8 @@ MonoBehaviour:
   orientation: {fileID: 6859540575947240330}
   navigation: {fileID: 7640394283221824895}
   crawlerWaypointMaker: {fileID: 5058969153046199446, guid: f34d439d45e762d4e8a5773d4374a17f, type: 3}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 512
   speed: 5
+  jumpCooldown: 10
