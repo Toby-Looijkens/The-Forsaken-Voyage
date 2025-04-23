@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class Rotate_Body : MonoBehaviour
 {
     [SerializeField] private LayerMask layer;
+    [SerializeField] private Crawler_Movement path;
     private int amountOfArcs = 10;
     private int rows = 5;
     [SerializeField] float speed = 1f;
@@ -29,10 +30,10 @@ public class Rotate_Body : MonoBehaviour
             Vector3 B = center + rotation * Vector3.forward * radius;
             Vector3 AB = B - A;
 
-            //Debug.DrawRay(A, AB, Color.red);
+            Debug.DrawRay(A, AB, Color.red);
             if (Physics.Raycast(A, AB, out hit, AB.magnitude * 1.001f, layer))
             {
-                //Debug.DrawRay(hit.point, hit.normal, Color.white);
+                Debug.DrawRay(hit.point, hit.normal, Color.white);
                 return true;
             }
         }
@@ -48,7 +49,7 @@ public class Rotate_Body : MonoBehaviour
 
         int amountOfHits = 0;
         Debug.DrawRay(transform.position, transform.up, Color.blue);
-
+       
         Vector3 averageNormal = Vector3.zero;
 
         if (ArcCast(transform.position, transform.rotation, arcAngle, arcRadius, arcResolution, layer, out RaycastHit hit))
@@ -69,9 +70,8 @@ public class Rotate_Body : MonoBehaviour
         }
 
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.FromToRotation(transform.up, averageNormal.normalized) * transform.rotation, 0.1f) ;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.FromToRotation(transform.up, averageNormal.normalized) * transform.rotation, 0.1f);
         Debug.DrawRay(transform.position, averageNormal, Color.magenta);
-
     }
 }
 

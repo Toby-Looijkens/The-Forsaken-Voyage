@@ -4,6 +4,7 @@ public class Health : MonoBehaviour
 {
 
     public int health = 10;
+    [SerializeField] GameObject parent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -16,7 +17,8 @@ public class Health : MonoBehaviour
     {
         if (health < 1)
         {
-            gameObject.SetActive(false);
+            Debug.Log(health);
+            Destroy(parent);
         }
     }
 

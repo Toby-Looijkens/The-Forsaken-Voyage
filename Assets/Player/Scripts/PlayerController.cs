@@ -24,6 +24,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] int recoilpower = 5;
     [SerializeField] Rigidbody rigidbody;
 
+    [Header("Player stats")]
+    [SerializeField] float hitImmunity = 0.5f;
+    [SerializeField] float health = 100;
+
+    private float immunityTimer = 0;
+
     private bool isPlayerLocked = false;
     private float rollingVelocity = 0;
 
@@ -72,8 +78,12 @@ public class PlayerController : MonoBehaviour
         {
             MovePlayer();
         }
+    }
 
-        Shoot();
+    private void OnTriggerStay(Collider other)
+    {
+        TakeDamage();
+
     }
 
     private void CenterRoll()
@@ -167,15 +177,7 @@ public class PlayerController : MonoBehaviour
         rigidbody.linearVelocity = speedVector;
     }
 
-    private void Shoot()
-    {
-        if (playerInputManager.isTriggerPulled > 0)
-        {
-            Recoil(recoilpower);
-        }
-    }
-
-    public void Recoil(int power)
+    public void Recoil(float power)
     {
         Vector3 input = playerInputManager.movementVector;
 
@@ -183,7 +185,7 @@ public class PlayerController : MonoBehaviour
         Vector3 forward = Camera.main.transform.forward;
 
         //Movement based on where player is looking
-        Vector3 forwardRelative = forward * power / 100;
+        Vector3 forwardRelative = forward * power / 10;
 
 
         rigidbody.linearVelocity -= forwardRelative;
@@ -193,5 +195,24 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 grapple = endPoint - rigidbody.position;
         rigidbody.linearVelocity += grapple * grapplingHookStrength;
+    }
+
+    public void TakeDamage()
+    {
+        if (immunityTimer > 0)
+        {
+            immunityTimer -= Time.deltaTime;
+            return;
+        }
+
+        health -= 12;
+        Debug.Log("Took Damage");
+        immunityTimer = hitImmunity;
+
+        if (health <= 0) 
+        {
+            Debug.Log("Dead");
+            //Death
+        }
     }
 }

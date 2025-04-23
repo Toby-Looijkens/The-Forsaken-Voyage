@@ -1,11 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using UnityEditor.Experimental.GraphView;
 
 public class Hitscan : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] private float range = 100f;
-    [SerializeField] private int damage = 10;
     [SerializeField] private LayerMask hitLayers;
     [SerializeField] private Transform muzzle;
     [SerializeField] private PlayerInputManager playerinput;
@@ -13,49 +12,73 @@ public class Hitscan : MonoBehaviour
     private Renderer enemyRenderer;
     [SerializeField] private Material hitMaterial;
     [SerializeField] private Material originalMaterial;
+    [SerializeField] private GameObject projectile;
     private GameObject hitObject;
     private bool finishanimation = true;
-   
+
+    [Header("Weapon Stats")]
+    [SerializeField] int fireRate = 400;
+    [SerializeField] private int damage = 1;
+    [SerializeField] bool semiAuto = true;
+    [SerializeField] int magazine = 7;
+    [SerializeField] int reserveAmmo = 35;
+    [SerializeField] int reserveAmmoTotal = 63;
+    [SerializeField] float recoilPower = 500;
+
+    private PlayerController playerController;
+
+    private bool hasReleasedTrigger = true;
+    private float timeSinceLastShot = 0;
+
+    public int ammo = 30;
+    private bool isShooting = false;
+    public Damage dmgScript;
+    public Energy engScript;
+    
     void Start()
     {
-
+        playerController = GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerinput.isTriggerPulled > 0)
+        if (playerinput.isTriggerPulled > 0 && isShooting == false && ammo > 0)
         {
             Fire();
+        } else
+        {
+            hasReleasedTrigger = true;
         }
     }
 
     void Fire()
     {
-        if (finishanimation == true) 
+        if (semiAuto && !hasReleasedTrigger)
         {
-            RaycastHit hit;
-            Vector3 rayDirection = playercam.forward;
-            Debug.DrawRay(playercam.position, rayDirection * range, Color.red, 0.1f);
-            if (Physics.Raycast(playercam.position, playercam.forward, out hit, range, hitLayers))
-            {
-                hitObject = hit.collider.gameObject;
-                enemyRenderer = hitObject.GetComponent<Renderer>();
-                originalMaterial = enemyRenderer.material;
-                StartCoroutine(HitAnimation());
-                finishanimation = false;
-                Debug.Log(originalMaterial);
-            }
+            return;
         }
-    }
 
-    private IEnumerator HitAnimation()
-    {
-        enemyRenderer.material = hitMaterial; // Change to hit material
-        yield return new WaitForSeconds(0.1f);  // Wait 1 second
-        enemyRenderer.material = originalMaterial; // Revert back
-        Health health = hitObject.GetComponent<Health>();
-        health.Damage();
-        finishanimation = true;
+        if (timeSinceLastShot > 0) 
+        {
+            timeSinceLastShot -= Time.deltaTime;
+            return;
+        }
+
+        GameObject temp = Instantiate(projectile, playercam.position + playercam.right * 0.5f + playercam.up * -0.5f, Quaternion.identity);
+        temp.GetComponent<Projectile>().direction = playercam.forward;
+
+        playerController.Recoil(recoilPower);
+
+        RaycastHit hit;
+        Vector3 rayDirection = playercam.forward;
+        Debug.DrawRay(playercam.position, rayDirection * range, Color.red, 0.1f);
+        if (Physics.Raycast(playercam.position, playercam.forward, out hit, range, hitLayers))
+        {
+            hitObject = hit.collider.gameObject;
+            hitObject.SendMessage("Damage");
+        }
+        hasReleasedTrigger = false;
+        timeSinceLastShot = 60f / fireRate;
     }
 }
