@@ -157,6 +157,7 @@ GameObject:
   - component: {fileID: 3454118108042756953}
   - component: {fileID: 1154792840427365349}
   - component: {fileID: 1544052247272967445}
+  - component: {fileID: 5529430699621773503}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -382,6 +383,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetNode: {fileID: 0}
+--- !u!114 &5529430699621773503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6314586875989858442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0873a2064013804abb9f8abb86f542d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 100
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  muzzle: {fileID: 5430447904619793883}
+  playerinput: {fileID: 3454118108042756953}
+  playercam: {fileID: 151504284382951739}
+  hitMaterial: {fileID: 2100000, guid: 959ab9eb6f9e447499f07558cbac8bba, type: 2}
+  originalMaterial: {fileID: 2100000, guid: f924e72e84a3de5438792abe84f76ad0, type: 2}
+  fireRate: 400
+  damage: 10
+  semiAuto: 0
 --- !u!1 &6533471581289145614
 GameObject:
   m_ObjectHideFlags: 0

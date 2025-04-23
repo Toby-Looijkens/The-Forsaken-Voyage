@@ -1,11 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using UnityEditor.Experimental.GraphView;
 
 public class Hitscan : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     [SerializeField] private float range = 100f;
-    [SerializeField] private int damage = 10;
     [SerializeField] private LayerMask hitLayers;
     [SerializeField] private Transform muzzle;
     [SerializeField] private PlayerInputManager playerinput;
@@ -15,7 +14,20 @@ public class Hitscan : MonoBehaviour
     [SerializeField] private Material originalMaterial;
     private GameObject hitObject;
     private bool finishanimation = true;
-   
+
+    [Header("Weapon Stats")]
+    [SerializeField] int fireRate = 400;
+    [SerializeField] private int damage = 1;
+    [SerializeField] bool semiAuto = true;
+    [SerializeField] int magazine = 7;
+    [SerializeField] int reserveAmmo = 35;
+    [SerializeField] int reserveAmmoTotal = 63;
+
+    private bool hasReleasedTrigger = true;
+    private float timeSinceLastShot = 0;
+
+
+
     void Start()
     {
 
@@ -27,26 +39,40 @@ public class Hitscan : MonoBehaviour
         if (playerinput.isTriggerPulled > 0)
         {
             Fire();
+        } else
+        {
+            hasReleasedTrigger = true;
         }
     }
 
     void Fire()
     {
-        if (finishanimation == true) 
+        if (semiAuto && !hasReleasedTrigger)
         {
-            RaycastHit hit;
-            Vector3 rayDirection = playercam.forward;
-            Debug.DrawRay(playercam.position, rayDirection * range, Color.red, 0.1f);
-            if (Physics.Raycast(playercam.position, playercam.forward, out hit, range, hitLayers))
-            {
-                hitObject = hit.collider.gameObject;
-                enemyRenderer = hitObject.GetComponent<Renderer>();
-                originalMaterial = enemyRenderer.material;
-                StartCoroutine(HitAnimation());
-                finishanimation = false;
-                Debug.Log(originalMaterial);
-            }
+            return;
         }
+
+        if (timeSinceLastShot > 0) 
+        {
+            timeSinceLastShot -= Time.deltaTime;
+            return;
+        }
+
+        RaycastHit hit;
+        Vector3 rayDirection = playercam.forward;
+        Debug.DrawRay(playercam.position, rayDirection * range, Color.red, 0.1f);
+        if (Physics.Raycast(playercam.position, playercam.forward, out hit, range, hitLayers))
+        {
+            hitObject = hit.collider.gameObject;
+            //enemyRenderer = hitObject.GetComponent<Renderer>();
+            //originalMaterial = enemyRenderer.material;
+            //StartCoroutine(HitAnimation());
+            //finishanimation = false;
+            Debug.Log("Hit");
+            hitObject.SendMessage("Damage");
+        }
+        hasReleasedTrigger = false;
+        timeSinceLastShot = 60f / fireRate;
     }
 
     private IEnumerator HitAnimation()
