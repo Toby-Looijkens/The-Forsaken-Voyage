@@ -17,6 +17,8 @@ public class Hitscan : MonoBehaviour
     private bool finishanimation = true;
     public int ammo = 30;
     private bool isShooting = false;
+    public Damage dmgScript;
+    public Energy engScript;
    
     void Start()
     {
@@ -52,6 +54,8 @@ public class Hitscan : MonoBehaviour
             enemyRenderer = hitObject.GetComponent<Renderer>();
             originalMaterial = enemyRenderer.material;
             StartCoroutine(HitAnimation());
+            //dmgScript.takeDamage(5);
+            engScript.decreaseEnergy(15);
             finishanimation = false;
             Debug.Log(originalMaterial);
         }

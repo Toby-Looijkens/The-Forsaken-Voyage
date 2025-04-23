@@ -53,8 +53,8 @@ public class DropOff : MonoBehaviour
         total = total + lootManager.totalValue;
         lootManager.totalValue = 0;
         lootManager.totalAmount = 0;
-        Debug.Log(total);
-        uiTotal.text = "Total: $" + total.ToString();
+        uiManager.UpdateTotal(total);
+        uiManager.UpdateHolding(0);
         finishCollect = true;
         yield return new WaitForSeconds(0.1f);
     }
