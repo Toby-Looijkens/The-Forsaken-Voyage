@@ -29,7 +29,7 @@ public class DropOff : MonoBehaviour
             var playerPosition = player.transform.position;
             distance = Vector3.Distance(dropoffPosition,playerPosition);
 
-            if (distance < 3) 
+            if (distance < 5) 
             {
                 uiManager.TipDropOffOn();
                 tipActive = true;
@@ -40,7 +40,7 @@ public class DropOff : MonoBehaviour
                 tipActive = false;
             }
 
-            if (distance < 3 && playerinput.isInteracting > 0) 
+            if (distance < 5 && playerinput.isInteracting > 0) 
             {
                 finishCollect = false;
                 StartCoroutine(Collect());
@@ -53,8 +53,8 @@ public class DropOff : MonoBehaviour
         total = total + lootManager.totalValue;
         lootManager.totalValue = 0;
         lootManager.totalAmount = 0;
-        Debug.Log(total);
-        uiTotal.text = "Total: $" + total.ToString();
+        uiManager.UpdateTotal(total);
+        uiManager.UpdateHolding(0);
         finishCollect = true;
         yield return new WaitForSeconds(0.1f);
     }

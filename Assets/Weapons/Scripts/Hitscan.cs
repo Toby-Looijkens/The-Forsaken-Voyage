@@ -30,8 +30,11 @@ public class Hitscan : MonoBehaviour
     private bool hasReleasedTrigger = true;
     private float timeSinceLastShot = 0;
 
-
-
+    public int ammo = 30;
+    private bool isShooting = false;
+    public Damage dmgScript;
+    public Energy engScript;
+    
     void Start()
     {
         playerController = GetComponent<PlayerController>();
@@ -40,7 +43,7 @@ public class Hitscan : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerinput.isTriggerPulled > 0)
+        if (playerinput.isTriggerPulled > 0 && isShooting == false && ammo > 0)
         {
             Fire();
         } else
@@ -73,20 +76,9 @@ public class Hitscan : MonoBehaviour
         if (Physics.Raycast(playercam.position, playercam.forward, out hit, range, hitLayers))
         {
             hitObject = hit.collider.gameObject;
-            Debug.Log("Hit");
             hitObject.SendMessage("Damage");
         }
         hasReleasedTrigger = false;
         timeSinceLastShot = 60f / fireRate;
-    }
-
-    private IEnumerator HitAnimation()
-    {
-        enemyRenderer.material = hitMaterial; // Change to hit material
-        yield return new WaitForSeconds(0.1f);  // Wait 1 second
-        enemyRenderer.material = originalMaterial; // Revert back
-        Health health = hitObject.GetComponent<Health>();
-        health.Damage();
-        finishanimation = true;
     }
 }
