@@ -56,4 +56,9 @@ public class CrawlerNavigation : MonoBehaviour
             transform.parent.position = Vector3.MoveTowards(transform.position, hit.point, speed * Time.deltaTime);
         }
     }
+
+    private void OnDestroy()
+    {
+        Destroy(crawlerWaypointMaker);
+    }
 }
