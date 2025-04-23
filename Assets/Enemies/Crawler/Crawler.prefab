@@ -156,7 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crawlerWaypointMaker: {fileID: 0}
   speed: 5
-  rotationComponent: {fileID: 0}
+  rotationComponent: {fileID: 2999998971785897901}
   amountOfArcsPerRow: 10
   rows: 1
   spacingBetweenRows: 1.5

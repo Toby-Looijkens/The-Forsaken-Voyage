@@ -12,6 +12,7 @@ public class Hitscan : MonoBehaviour
     private Renderer enemyRenderer;
     [SerializeField] private Material hitMaterial;
     [SerializeField] private Material originalMaterial;
+    [SerializeField] private GameObject projectile;
     private GameObject hitObject;
     private bool finishanimation = true;
 
@@ -22,6 +23,9 @@ public class Hitscan : MonoBehaviour
     [SerializeField] int magazine = 7;
     [SerializeField] int reserveAmmo = 35;
     [SerializeField] int reserveAmmoTotal = 63;
+    [SerializeField] float recoilPower = 500;
+
+    private PlayerController playerController;
 
     private bool hasReleasedTrigger = true;
     private float timeSinceLastShot = 0;
@@ -30,7 +34,7 @@ public class Hitscan : MonoBehaviour
 
     void Start()
     {
-
+        playerController = GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
@@ -58,16 +62,17 @@ public class Hitscan : MonoBehaviour
             return;
         }
 
+        GameObject temp = Instantiate(projectile, playercam.position + playercam.right * 0.5f + playercam.up * -0.5f, Quaternion.identity);
+        temp.GetComponent<Projectile>().direction = playercam.forward;
+
+        playerController.Recoil(recoilPower);
+
         RaycastHit hit;
         Vector3 rayDirection = playercam.forward;
         Debug.DrawRay(playercam.position, rayDirection * range, Color.red, 0.1f);
         if (Physics.Raycast(playercam.position, playercam.forward, out hit, range, hitLayers))
         {
             hitObject = hit.collider.gameObject;
-            //enemyRenderer = hitObject.GetComponent<Renderer>();
-            //originalMaterial = enemyRenderer.material;
-            //StartCoroutine(HitAnimation());
-            //finishanimation = false;
             Debug.Log("Hit");
             hitObject.SendMessage("Damage");
         }
