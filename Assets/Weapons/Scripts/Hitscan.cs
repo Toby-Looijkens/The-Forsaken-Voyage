@@ -15,6 +15,10 @@ public class Hitscan : MonoBehaviour
     [SerializeField] private Material originalMaterial;
     private GameObject hitObject;
     private bool finishanimation = true;
+    public int ammo = 30;
+    private bool isShooting = false;
+    public Damage dmgScript;
+    public Energy engScript;
    
     void Start()
     {
@@ -24,28 +28,36 @@ public class Hitscan : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerinput.isTriggerPulled > 0)
+        if (playerinput.isTriggerPulled > 0 && isShooting == false && ammo > 0)
         {
-            Fire();
+            StartCoroutine(PreShot());
         }
+    }
+
+    private IEnumerator PreShot ()
+    {
+        isShooting = true;
+        Fire();
+        ammo--;
+        yield return new WaitForSeconds(0.25f);
+        isShooting = false;
     }
 
     void Fire()
     {
-        if (finishanimation == true) 
+        RaycastHit hit;
+        Vector3 rayDirection = playercam.forward;
+        Debug.DrawRay(playercam.position, rayDirection * range, Color.red, 0.1f);
+        if (Physics.Raycast(playercam.position, playercam.forward, out hit, range, hitLayers))
         {
-            RaycastHit hit;
-            Vector3 rayDirection = playercam.forward;
-            Debug.DrawRay(playercam.position, rayDirection * range, Color.red, 0.1f);
-            if (Physics.Raycast(playercam.position, playercam.forward, out hit, range, hitLayers))
-            {
-                hitObject = hit.collider.gameObject;
-                enemyRenderer = hitObject.GetComponent<Renderer>();
-                originalMaterial = enemyRenderer.material;
-                StartCoroutine(HitAnimation());
-                finishanimation = false;
-                Debug.Log(originalMaterial);
-            }
+            hitObject = hit.collider.gameObject;
+            enemyRenderer = hitObject.GetComponent<Renderer>();
+            originalMaterial = enemyRenderer.material;
+            StartCoroutine(HitAnimation());
+            //dmgScript.takeDamage(5);
+            engScript.decreaseEnergy(15);
+            finishanimation = false;
+            Debug.Log(originalMaterial);
         }
     }
 
