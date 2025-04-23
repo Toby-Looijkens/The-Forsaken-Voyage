@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LootManager : MonoBehaviour
 {
@@ -38,6 +39,8 @@ public class LootManager : MonoBehaviour
 
         weightFill = weight / 20;
         uiBars.WeightBar(weightFill);
+
+        
     }
 
     public void Collect(int lootValue)

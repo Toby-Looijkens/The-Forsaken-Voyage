@@ -39,10 +39,11 @@ public class CrawlerBehaviour : MonoBehaviour
             }
         }
 
-        if (timer <= 0) 
-        { 
+        if (timer <= 0)
+        {
             canJump = true;
-        } else
+        }
+        else
         {
             timer -= Time.deltaTime;
         }
@@ -52,7 +53,6 @@ public class CrawlerBehaviour : MonoBehaviour
     {
         if (Physics.Raycast(transform.position, player.position - transform.position, out RaycastHit hitInfo, 100f, layerMask))
         {
-            Debug.Log("test");
             Destroy(navigation.crawlerWaypointMaker);
             navigation.enabled = false;
             orientation.enabled = false;

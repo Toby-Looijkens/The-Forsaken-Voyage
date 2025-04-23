@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class UIManager : MonoBehaviour
     public Hitscan hitscan;
     public int ammo;
     private int uiManQuota;
+    private int totalCollected;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -24,6 +26,12 @@ public class UIManager : MonoBehaviour
     {
         ammo = hitscan.ammo;
         uiAmmo.text = ammo.ToString();
+
+        if (totalCollected >= uiManQuota)
+        {
+            SceneManager.LoadScene("Victory");
+        }
+        
     }
 
     public void TipLootCollectOn()
@@ -55,6 +63,7 @@ public class UIManager : MonoBehaviour
     public void UpdateTotal(int uiManTotal)
     {
         uiTotal.text = "$" + uiManTotal + " / $" + uiManQuota;
+        totalCollected = uiManTotal;
     }
 
     public void UpdateHolding (int uiManHolding)
