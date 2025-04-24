@@ -3,7 +3,7 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
 
-    public int health = 10;
+    public float health = 10;
     [SerializeField] GameObject parent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -22,8 +22,8 @@ public class Health : MonoBehaviour
         }
     }
 
-    public void Damage()
+    public void Damage(float damage)
     {
-        health = health - 1;
+        health = health - damage;
     }
 }

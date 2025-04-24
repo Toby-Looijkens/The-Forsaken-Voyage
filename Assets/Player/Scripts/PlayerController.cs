@@ -1,9 +1,11 @@
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
+using UnityEditor.SearchService;
 using UnityEditor.U2D;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,12 +25,15 @@ public class PlayerController : MonoBehaviour
     [Header("Extra")]
     [SerializeField] int recoilpower = 5;
     [SerializeField] Rigidbody rigidbody;
+    [SerializeField] LayerMask layer;
+    [SerializeField] MusicSwitch musicSwitch;
 
     [Header("Player stats")]
     [SerializeField] float hitImmunity = 0.5f;
     [SerializeField] float health = 100;
 
     private float immunityTimer = 0;
+    public UIBars uiBars;
 
     private bool isPlayerLocked = false;
     private float rollingVelocity = 0;
@@ -78,12 +83,13 @@ public class PlayerController : MonoBehaviour
         {
             MovePlayer();
         }
+
+        DetectEnemy();
     }
 
     private void OnTriggerStay(Collider other)
     {
         TakeDamage();
-
     }
 
     private void CenterRoll()
@@ -206,13 +212,43 @@ public class PlayerController : MonoBehaviour
         }
 
         health -= 12;
-        Debug.Log("Took Damage");
+        Debug.Log(health);
         immunityTimer = hitImmunity;
 
         if (health <= 0) 
         {
-            Debug.Log("Dead");
             //Death
+            SceneManager.LoadScene("GameOver");
+        }
+
+        uiBars.HealthBar(health / 100);
+    }
+
+    private void DetectEnemy()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        int lineOfSightTotal = 0;
+
+        foreach (GameObject enemy in enemies) 
+        {
+            Debug.DrawRay(transform.position, enemy.transform.position - transform.position, Color.blue);
+            if (Physics.Raycast(transform.position, transform.position - enemy.transform.position, out RaycastHit hit))
+            {
+                if (hit.collider.gameObject.layer == layer)
+                {
+                    lineOfSightTotal++;
+                }
+            }
+        }
+
+        if (lineOfSightTotal > 0)
+        {
+            musicSwitch.SwapToCombatOST();
+        } 
+        else
+        {
+            musicSwitch.SwapToAmbienceOST();
         }
     }
 }

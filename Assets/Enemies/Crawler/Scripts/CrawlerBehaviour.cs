@@ -4,7 +4,7 @@ using UnityEngine.AI;
 
 public class CrawlerBehaviour : MonoBehaviour
 {
-    [SerializeField] Rigidbody player;
+    [SerializeField] GameObject player;
     [SerializeField] CrawlerOrientation orientation;
     [SerializeField] CrawlerNavigation navigation;
     [SerializeField] GameObject crawlerWaypointMaker;
@@ -17,6 +17,11 @@ public class CrawlerBehaviour : MonoBehaviour
     private float distance = 0;
     private Vector3 targetNormal = Vector3.zero;
     private bool canJump = false;
+
+    private void Start()
+    {
+        player = GameObject.Find("Player");
+    }
 
     void Update()
     {
@@ -51,7 +56,7 @@ public class CrawlerBehaviour : MonoBehaviour
 
     private void Attack()
     {
-        if (Physics.Raycast(transform.position, player.position - transform.position, out RaycastHit hitInfo, 100f, layerMask))
+        if (Physics.Raycast(transform.position, player.transform.position - transform.position, out RaycastHit hitInfo, 100f, layerMask))
         {
             Destroy(navigation.crawlerWaypointMaker);
             navigation.enabled = false;

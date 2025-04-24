@@ -18,31 +18,48 @@ public class Hitscan : MonoBehaviour
 
     [Header("Weapon Stats")]
     [SerializeField] int fireRate = 400;
-    [SerializeField] private int damage = 1;
+    [SerializeField] private float damage = 2;
     [SerializeField] bool semiAuto = true;
-    [SerializeField] int magazine = 7;
-    [SerializeField] int reserveAmmo = 35;
-    [SerializeField] int reserveAmmoTotal = 63;
-    [SerializeField] float recoilPower = 500;
+    [SerializeField] public int ammo = 20;
+    [SerializeField] int magazineSize = 20;
+    [SerializeField] public int reserveAmmo = 60;
+    [SerializeField] int reserveAmmoTotal = 120;
+    [SerializeField] float recoilPower = 30;
+    [SerializeField] float reloadTime = 2.25f;
 
     private PlayerController playerController;
 
     private bool hasReleasedTrigger = true;
     private float timeSinceLastShot = 0;
 
-    public int ammo = 30;
     private bool isShooting = false;
+    public bool isReloading = false;
+    private float reloadDuration = 0;
     public Damage dmgScript;
     public Energy engScript;
     
     void Start()
     {
-        playerController = GetComponent<PlayerController>();
+        playerController = GetComponentInParent<PlayerController>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (isReloading) 
+        { 
+            if (reloadDuration >= reloadTime)
+            {
+                Reload();
+                reloadDuration = 0;
+                isReloading = false;
+            } 
+            else
+            {
+                reloadDuration += Time.deltaTime;
+            }
+        }
+
         if (playerinput.isTriggerPulled > 0 && isShooting == false && ammo > 0)
         {
             Fire();
@@ -54,10 +71,9 @@ public class Hitscan : MonoBehaviour
 
     void Fire()
     {
-        if (semiAuto && !hasReleasedTrigger)
-        {
-            return;
-        }
+        if (ammo <= 0 || isReloading == true) return;
+
+        if (semiAuto && !hasReleasedTrigger) return;
 
         if (timeSinceLastShot > 0) 
         {
@@ -76,9 +92,33 @@ public class Hitscan : MonoBehaviour
         if (Physics.Raycast(playercam.position, playercam.forward, out hit, range, hitLayers))
         {
             hitObject = hit.collider.gameObject;
-            hitObject.SendMessage("Damage");
+            hitObject.SendMessage("Damage", damage);
         }
         hasReleasedTrigger = false;
         timeSinceLastShot = 60f / fireRate;
+        ammo--;
+    }
+
+    private void OnReload()
+    {
+      isReloading = true;
+    }
+
+    private void Reload()
+    {
+        if (reserveAmmo <= 0) return;
+
+        reserveAmmo += ammo;
+
+        if (reserveAmmo >= magazineSize)
+        {
+            ammo = magazineSize;
+            reserveAmmo -= magazineSize;
+        }
+        else
+        {
+            ammo = reserveAmmo;
+            reserveAmmo = 0;
+        }
     }
 }

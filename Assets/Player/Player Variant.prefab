@@ -1,5 +1,58 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2386267142799928870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5782668895543022097}
+  - component: {fileID: 3463606742835399745}
+  m_Layer: 8
+  m_Name: NavmeshCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5782668895543022097
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2386267142799928870}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 213028211477705792}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &3463606742835399745
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2386267142799928870}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 887
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 11.57
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8180919179243948996
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,7 +174,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   range: 100
-  damage: 10
   hitLayers:
     serializedVersion: 2
     m_Bits: 64
@@ -130,7 +182,17 @@ MonoBehaviour:
   playercam: {fileID: 5901962178509539544}
   hitMaterial: {fileID: 2100000, guid: 959ab9eb6f9e447499f07558cbac8bba, type: 2}
   originalMaterial: {fileID: 0}
-  ammo: 30
+  projectile: {fileID: 3698024220151020271, guid: ad17f2439750a2d4495d5826b1db246f, type: 3}
+  fireRate: 400
+  damage: 10
+  semiAuto: 0
+  ammo: 20
+  magazineSize: 20
+  reserveAmmo: 60
+  reserveAmmoTotal: 120
+  recoilPower: 40
+  reloadTime: 2.25
+  isReloading: 0
   dmgScript: {fileID: 0}
   engScript: {fileID: 0}
 --- !u!1001 &6052199138148381155
@@ -145,6 +207,18 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 340086627539845474, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
+      propertyPath: m_CollisionDetection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 353372681641872353, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
+      propertyPath: m_Radius
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 353372681641872353, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 951
+      objectReference: {fileID: 0}
     - target: {fileID: 1154792840427365349, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
       propertyPath: grappleCooldown
       value: 0.2
@@ -156,6 +230,14 @@ PrefabInstance:
     - target: {fileID: 1154792840427365349, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
       propertyPath: maxGrappleDistance
       value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 1544052247272967445, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1544052247272967445, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
+      propertyPath: layer.m_Bits
+      value: 640
       objectReference: {fileID: 0}
     - target: {fileID: 4639030096827014310, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
       propertyPath: recoilpower
@@ -171,15 +253,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5839320486022055331, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.2
+      value: 13.59616
       objectReference: {fileID: 0}
     - target: {fileID: 5839320486022055331, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.1
+      value: -12.113092
       objectReference: {fileID: 0}
     - target: {fileID: 5839320486022055331, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -28.116007
+      value: -45.81801
       objectReference: {fileID: 0}
     - target: {fileID: 5839320486022055331, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -213,12 +295,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Variant
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5529430699621773503, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 5839320486022055331, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
       insertIndex: 0
       addedObject: {fileID: 6146436520753020393}
+    - targetCorrespondingSourceObject: {fileID: 5839320486022055331, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5782668895543022097}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cb6a72cdd9974464b9b8d1ca370317fd, type: 3}
 --- !u!4 &213028211477705792 stripped

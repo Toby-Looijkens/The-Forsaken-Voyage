@@ -27,6 +27,11 @@ public class PlayerInputManager : MonoBehaviour
         isTriggerPulled = value.Get<float>();
     }
 
+    private void OnReload(InputValue value)
+    {
+        gameObject.GetComponentInChildren<Hitscan>().isReloading = true;
+    }
+
     private void OnStop(InputValue value)
     {
         isAlignmentKeyPressed = value.Get<float>();

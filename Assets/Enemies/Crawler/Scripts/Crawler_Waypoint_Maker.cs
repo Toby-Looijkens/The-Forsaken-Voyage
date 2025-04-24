@@ -21,7 +21,7 @@ public class Crawler_Waypoint_Maker : MonoBehaviour
 
     private void Update()
     {
-        agent.destination = player.transform.position;
+        agent.destination = player.GetComponent<PostionPlayerOnNavmesh>().target;
 
         if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, 50, mask))
         {

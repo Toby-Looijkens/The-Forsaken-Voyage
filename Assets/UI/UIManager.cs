@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI uiHolding;
     public Hitscan hitscan;
     public int ammo;
+    public int reserveAmmo;
     private int uiManQuota;
     private int totalCollected;
 
@@ -24,9 +25,17 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ammo = hitscan.ammo;
-        uiAmmo.text = ammo.ToString();
-
+        if (hitscan.isReloading) 
+        {
+            uiAmmo.text = "Reloading...";
+        }
+        else
+        {
+            ammo = hitscan.ammo;
+            reserveAmmo = hitscan.reserveAmmo;
+            uiAmmo.text = ammo.ToString() + "/" + reserveAmmo.ToString();
+        }
+        
         if (totalCollected >= uiManQuota)
         {
             SceneManager.LoadScene("Victory");
